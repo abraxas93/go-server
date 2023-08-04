@@ -1,8 +1,8 @@
 package main
 
 import (
+	"go-server/internal/logger"
 	"log"
-	"os"
 )
 
 type Config struct {
@@ -30,6 +30,17 @@ func main() {
 	// 	fmt.Println(fieldName, "not found.")
 	// }
 	flags := log.LstdFlags | log.Lshortfile
-	infoLogger := log.New(os.Stdout, "", flags)
-	infoLogger.Printf("This is my string %q\n", "custom string")
+	// infoLogger := log.New(os.Stdout, "", flags)
+	// infoLogger.Printf("This is my string %q\n", "custom string")
+	msgs := make(map[string]string)
+	msgs["Info"] = "INFO: "
+	msgs["Warn"] = "WARN: "
+	msgs["Err"] = "ERROR: "
+	l := logger.CreateLogger(msgs, flags)
+	// fmt.Printf("%T\n", "sdfsg")
+
+	l.Info("---> %T", "Hello World")
+	l.Warn("---> %T", "Hello World")
+	l.Err("---> %T", "Hello World")
+	// l.Warn("Warning")
 }
