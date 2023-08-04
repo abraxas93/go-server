@@ -1,8 +1,10 @@
 package main
 
 import (
-	"go-server/internal/logger"
+	"fmt"
+	"go-server/pkg/logger"
 	"log"
+	"os"
 )
 
 type Config struct {
@@ -12,11 +14,12 @@ type Config struct {
 
 func main() {
 	// Read the .env file
-	// data, err := os.ReadFile(".env")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
+	data, err := os.ReadFile(".env")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(data))
 	// fmt.Println(strings.Split(string(data), "="))
 	// cfg := Config{Port: 8080, Env: "dev"}
 	// structValue := reflect.ValueOf(&cfg).Elem()
@@ -42,5 +45,9 @@ func main() {
 	l.Info("---> %T", "Hello World")
 	l.Warn("---> %T", "Hello World")
 	l.Err("---> %T", "Hello World")
+	i := 1
+	var myInt *int
+	myInt = &i
+	fmt.Println(*myInt)
 	// l.Warn("Warning")
 }
