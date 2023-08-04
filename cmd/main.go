@@ -1,18 +1,35 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
-	"strings"
 )
+
+type Config struct {
+	Port int
+	Env  string
+}
 
 func main() {
 	// Read the .env file
-	data, err := os.ReadFile(".env")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(strings.Split(string(data), "="))
-
+	// data, err := os.ReadFile(".env")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// fmt.Println(strings.Split(string(data), "="))
+	// cfg := Config{Port: 8080, Env: "dev"}
+	// structValue := reflect.ValueOf(&cfg).Elem()
+	// // structType := structValue.Type()
+	// fmt.Println("Struct Type:", structValue)
+	// fieldName := "Port"
+	// fieldValue := reflect.ValueOf(cfg).FieldByName(fieldName)
+	// if fieldValue.IsValid() {
+	// 	fmt.Println(fieldName, "=", fieldValue.Interface())
+	// } else {
+	// 	fmt.Println(fieldName, "not found.")
+	// }
+	flags := log.LstdFlags | log.Lshortfile
+	infoLogger := log.New(os.Stdout, "", flags)
+	infoLogger.Printf("This is my string %q\n", "custom string")
 }
