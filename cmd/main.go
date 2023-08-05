@@ -39,15 +39,13 @@ func main() {
 	msgs["Info"] = "INFO: "
 	msgs["Warn"] = "WARN: "
 	msgs["Err"] = "ERROR: "
-	l := logger.CreateLogger(msgs, flags)
+	logger.InitLogger(msgs, flags)
 	// fmt.Printf("%T\n", "sdfsg")
-
-	l.Info("---> %T", "Hello World")
-	l.Warn("---> %T", "Hello World")
-	l.Err("---> %T", "Hello World")
-	i := 1
-	var myInt *int
-	myInt = &i
-	fmt.Println(*myInt)
-	// l.Warn("Warning")
+	logger, err := logger.GetLogger()
+	if err != nil {
+		fmt.Println(err)
+	}
+	logger.Info("---> %T", "Hello World")
+	logger.Warn("---> %T", "Hello World")
+	logger.Err("---> %T", "Hello World")
 }
