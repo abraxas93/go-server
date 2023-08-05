@@ -30,11 +30,16 @@ func setField(obj interface{}, fieldName string, value interface{}) error {
 }
 
 func convertToFieldName(strVar string) string {
-	c := strVar[0]
-	l := strings.ToLower(strVar)
-	bytes := []byte(l)
-	bytes[0] = c
-	return string(bytes)
+	if len(strVar) == 0 {
+		return strVar
+	}
+
+	firstChar := strVar[0]
+	lowercased := strings.ToLower(strVar)
+	chars := []byte(lowercased)
+	chars[0] = firstChar
+
+	return string(chars)
 }
 
 func GetConfig() Config {
