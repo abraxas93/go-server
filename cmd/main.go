@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"go-server/pkg/config"
 	"go-server/pkg/logger"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -12,21 +14,49 @@ type Config struct {
 	Env  string
 }
 
-func main() {
-	// Read the .env file
-	// data, err := os.ReadFile(".env")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	str := "ENV"
-	c := str[0]
-	s := strings.ToLower("ENV")
-	bytes := []byte(s)
-	bytes[0] = c
-	fmt.Println(string(bytes))
-	flags := log.LstdFlags | log.Lshortfile
+func convertToFieldName(strVar string) string {
+	if len(strVar) == 0 {
+		return strVar
+	}
 
+	strArr := strings.Split(string(strVar), "_")
+	var fieldName string
+	for _, s := range strArr {
+		firstChar := s[0]
+		lowercased := strings.ToLower(s)
+		chars := []byte(lowercased)
+		chars[0] = firstChar
+		fieldName += string(chars)
+	}
+
+	return fieldName
+}
+
+func main() {
+	fmt.Println(convertToFieldName("POSTGRES_DB_USER"))
+	// Read the .env file
+	data, err := os.ReadFile(".env")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(data))
+	fmt.Println(config.GetConfig())
+	fmt.Println(strings.Split(string(data), "="))
+	// cfg := Config{Port: 8080, Env: "dev"}
+	// structValue := reflect.ValueOf(&cfg).Elem()
+	// // structType := structValue.Type()
+	// fmt.Println("Struct Type:", structValue)
+	// fieldName := "Port"
+	// fieldValue := reflect.ValueOf(cfg).FieldByName(fieldName)
+	// if fieldValue.IsValid() {
+	// 	fmt.Println(fieldName, "=", fieldValue.Interface())
+	// } else {
+	// 	fmt.Println(fieldName, "not found.")
+	// }
+	flags := log.LstdFlags | log.Lshortfile
+	// infoLogger := log.New(os.Stdout, "", flags)
+	// infoLogger.Printf("This is my string %q\n", "custom string")
 	msgs := make(map[string]string)
 	msgs["Info"] = "INFO: "
 	msgs["Warn"] = "WARN: "

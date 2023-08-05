@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	Env string
+	Env          string
+	PostgresUser string
 }
 
 var cfg = Config{Env: os.Getenv("ENV")}
@@ -34,15 +35,20 @@ func convertToFieldName(strVar string) string {
 		return strVar
 	}
 
-	firstChar := strVar[0]
-	lowercased := strings.ToLower(strVar)
-	chars := []byte(lowercased)
-	chars[0] = firstChar
+	strArr := strings.Split(string(strVar), "_")
+	var fieldName string
+	for _, s := range strArr {
+		firstChar := s[0]
+		lowercased := strings.ToLower(s)
+		chars := []byte(lowercased)
+		chars[0] = firstChar
+		fieldName += string(chars)
+	}
 
-	return string(chars)
+	return fieldName
 }
 
 func GetConfig() Config {
-	fieldValue := reflect.ValueOf(cfg)
+	// fieldValue := reflect.ValueOf(cfg)
 	return cfg
 }
