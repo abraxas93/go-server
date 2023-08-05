@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-server/pkg/config"
 	"go-server/pkg/logger"
 	"log"
 	"os"
@@ -20,6 +21,7 @@ func main() {
 		return
 	}
 	fmt.Println(string(data))
+	fmt.Println(config.GetConfig())
 	// fmt.Println(strings.Split(string(data), "="))
 	// cfg := Config{Port: 8080, Env: "dev"}
 	// structValue := reflect.ValueOf(&cfg).Elem()
