@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strings"
+	"go-server/pkg/config"
 )
 
 type Config struct {
@@ -11,53 +10,9 @@ type Config struct {
 	Env  string
 }
 
-func convertToFieldName(strVar string) string {
-	if len(strVar) == 0 {
-		return strVar
-	}
-
-	strArr := strings.Split(string(strVar), "_")
-	var fieldName string
-	for _, s := range strArr {
-		firstChar := s[0]
-		lowercased := strings.ToLower(s)
-		chars := []byte(lowercased)
-		chars[0] = firstChar
-		fieldName += string(chars)
-	}
-
-	return fieldName
-}
-
-func loadEnvFile(filePath string) ([]string, error) {
-	data, err := os.ReadFile(filePath)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	parsed := strings.Split(string(data), "\n")
-	var words []string
-	for _, line := range parsed {
-		keys := strings.Split(string(line), "=")
-		words = append(words, keys...)
-	}
-
-	for i, str := range words {
-		if i%2 == 0 {
-			words[i] = convertToFieldName(str)
-		}
-	}
-	return words, nil
-}
-
 func main() {
-	data, err := loadEnvFile(".env")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(data)
+	cfg := config.GetConfig(".env")
+	fmt.Printf("%+v\n", cfg)
 	// fmt.Println(convertToFieldName("POSTGRES_DB_USER"))
 	// // Read the .env file
 	// data, err := os.ReadFile(".env")

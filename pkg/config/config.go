@@ -8,11 +8,10 @@ import (
 )
 
 type Config struct {
-	Env          string
-	PostgresUser string
+	Env              string
+	PostgresUser     string
+	PostgresPassword string
 }
-
-var cfg = Config{Env: os.Getenv("ENV")}
 
 func setField(obj interface{}, fieldName string, value interface{}) error {
 	structValue := reflect.ValueOf(obj).Elem()
@@ -58,6 +57,9 @@ func loadEnvFile(filePath string) ([]string, error) {
 	parsed := strings.Split(string(data), "\n")
 	var words []string
 	for _, line := range parsed {
+		if line == "" {
+			continue
+		}
 		keys := strings.Split(string(line), "=")
 		words = append(words, keys...)
 	}
@@ -70,7 +72,17 @@ func loadEnvFile(filePath string) ([]string, error) {
 	return words, nil
 }
 
-func GetConfig() Config {
-
+func GetConfig(path string) *Config {
+	cfg := &Config{Env: os.Getenv("ENV")}
+	data, err := loadEnvFile(path)
+	if err != nil {
+		panic(err)
+	}
+	for i, word := range data {
+		if i%2 == 1 {
+			continue
+		}
+		setField(cfg, word, data[i+1])
+	}
 	return cfg
 }
