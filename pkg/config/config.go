@@ -48,7 +48,29 @@ func convertToFieldName(strVar string) string {
 	return fieldName
 }
 
+func loadEnvFile(filePath string) ([]string, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	parsed := strings.Split(string(data), "\n")
+	var words []string
+	for _, line := range parsed {
+		keys := strings.Split(string(line), "=")
+		words = append(words, keys...)
+	}
+
+	for i, str := range words {
+		if i%2 == 0 {
+			words[i] = convertToFieldName(str)
+		}
+	}
+	return words, nil
+}
+
 func GetConfig() Config {
-	// fieldValue := reflect.ValueOf(cfg)
+
 	return cfg
 }

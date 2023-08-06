@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	"go-server/pkg/config"
-	"go-server/pkg/logger"
-	"log"
 	"os"
 	"strings"
 )
@@ -32,17 +29,45 @@ func convertToFieldName(strVar string) string {
 	return fieldName
 }
 
+func loadEnvFile(filePath string) ([]string, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	parsed := strings.Split(string(data), "\n")
+	var words []string
+	for _, line := range parsed {
+		keys := strings.Split(string(line), "=")
+		words = append(words, keys...)
+	}
+
+	for i, str := range words {
+		if i%2 == 0 {
+			words[i] = convertToFieldName(str)
+		}
+	}
+	return words, nil
+}
+
 func main() {
-	fmt.Println(convertToFieldName("POSTGRES_DB_USER"))
-	// Read the .env file
-	data, err := os.ReadFile(".env")
+	data, err := loadEnvFile(".env")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(string(data))
-	fmt.Println(config.GetConfig())
-	fmt.Println(strings.Split(string(data), "="))
+	fmt.Println(data)
+	// fmt.Println(convertToFieldName("POSTGRES_DB_USER"))
+	// // Read the .env file
+	// data, err := os.ReadFile(".env")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// fmt.Println(string(data))
+	// fmt.Println(config.GetConfig())
+	// fmt.Println(strings.Split(string(data), "="))
 	// cfg := Config{Port: 8080, Env: "dev"}
 	// structValue := reflect.ValueOf(&cfg).Elem()
 	// // structType := structValue.Type()
@@ -54,20 +79,20 @@ func main() {
 	// } else {
 	// 	fmt.Println(fieldName, "not found.")
 	// }
-	flags := log.LstdFlags | log.Lshortfile
-	// infoLogger := log.New(os.Stdout, "", flags)
-	// infoLogger.Printf("This is my string %q\n", "custom string")
-	msgs := make(map[string]string)
-	msgs["Info"] = "INFO: "
-	msgs["Warn"] = "WARN: "
-	msgs["Err"] = "ERROR: "
-	logger.InitLogger(msgs, flags)
-	// fmt.Printf("%T\n", "sdfsg")
-	logger, err := logger.GetLogger()
-	if err != nil {
-		fmt.Println(err)
-	}
-	logger.Info("---> %T", "Hello World")
-	logger.Warn("---> %T", "Hello World")
-	logger.Err("---> %T", "Hello World")
+	// flags := log.LstdFlags | log.Lshortfile
+	// // infoLogger := log.New(os.Stdout, "", flags)
+	// // infoLogger.Printf("This is my string %q\n", "custom string")
+	// msgs := make(map[string]string)
+	// msgs["Info"] = "INFO: "
+	// msgs["Warn"] = "WARN: "
+	// msgs["Err"] = "ERROR: "
+	// logger.InitLogger(msgs, flags)
+	// // fmt.Printf("%T\n", "sdfsg")
+	// logger, err := logger.GetLogger()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// logger.Info("---> %T", "Hello World")
+	// logger.Warn("---> %T", "Hello World")
+	// logger.Err("---> %T", "Hello World")
 }
