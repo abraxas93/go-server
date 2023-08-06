@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go-server/pkg/config"
+	"go-server/pkg/logger"
 )
 
 type Config struct {
@@ -12,7 +13,15 @@ type Config struct {
 
 func main() {
 	cfg := config.GetConfig(".env")
+	msgs := make(map[string]string)
+	msgs["Info"] = "INFO: "
+	msgs["Warn"] = "WARN: "
+	msgs["Err"] = "ERROR: "
+	logger.InitLogger(msgs)
+	logger, _ := logger.GetLogger()
 	fmt.Printf("%+v\n", cfg)
+	logger.Info("---> %s\n", "my")
+
 	// fmt.Println(convertToFieldName("POSTGRES_DB_USER"))
 	// // Read the .env file
 	// data, err := os.ReadFile(".env")

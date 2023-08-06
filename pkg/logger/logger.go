@@ -34,12 +34,30 @@ func (l *Logger) Err(format string, v ...interface{}) {
 	l.errLogger.Printf(ColorRed+format+ColorReset, v...)
 }
 
-func InitLogger(messages map[string]string, flags int) {
-	logger = Logger{
-		infoLogger: log.New(os.Stdout, ColorGreen+messages["Info"], flags),
-		warnLogger: log.New(os.Stdout, ColorYellow+messages["Warn"], flags),
-		errLogger:  log.New(os.Stdout, ColorRed+messages["Err"], flags),
+func initLogger(messages map[string]string, flags int) {
+	// Use the default messages if messages is nil or empty
+	if len(messages) == 0 {
+		messages = map[string]string{
+			"Info": " [INFO] ",
+			"Warn": " [WARNING] ",
+			"Err":  " [ERROR] ",
+		}
 	}
+
+	logger = Logger{
+		infoLogger: log.New(os.Stdout, ColorGreen+messages["Info"], flags|log.LstdFlags|log.Lshortfile),
+		warnLogger: log.New(os.Stdout, ColorYellow+messages["Warn"], flags|log.LstdFlags|log.Lshortfile),
+		errLogger:  log.New(os.Stdout, ColorRed+messages["Err"], flags|log.LstdFlags|log.Lshortfile),
+	}
+}
+
+func InitLogger(messages map[string]string, options ...int) {
+	var flags int
+	if len(options) > 0 {
+		flags = options[0]
+	}
+
+	initLogger(messages, flags)
 }
 
 func GetLogger() (Logger, error) {
