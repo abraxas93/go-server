@@ -11,6 +11,9 @@ type Config struct {
 	Env              string
 	PostgresUser     string
 	PostgresPassword string
+	PostgresDbName   string
+	PostgresHost     string
+	PostgresPort     int
 }
 
 func setField(obj interface{}, fieldName string, value interface{}) error {
