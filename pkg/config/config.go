@@ -3,8 +3,9 @@ package config
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 type ServerConfig struct {
@@ -29,41 +30,7 @@ type Config struct {
 	DB     DBConfig     `yaml:"db"`
 }
 
-func setField(obj interface{}, fieldName string, value interface{}) error {
-	structValue := reflect.ValueOf(obj).Elem()
-	fieldValue := structValue.FieldByName(fieldName)
-
-	if !fieldValue.IsValid() {
-		return fmt.Errorf("field with name %s not found", fieldName)
-	}
-
-	if !fieldValue.CanSet() {
-		return fmt.Errorf("cannot set field with name %s", fieldName)
-	}
-
-	fieldValue.Set(reflect.ValueOf(value))
-	return nil
-}
-
-func convertToFieldName(strVar string) string {
-	if len(strVar) == 0 {
-		return strVar
-	}
-
-	strArr := strings.Split(string(strVar), "_")
-	var fieldName string
-	for _, s := range strArr {
-		firstChar := s[0]
-		lowercased := strings.ToLower(s)
-		chars := []byte(lowercased)
-		chars[0] = firstChar
-		fieldName += string(chars)
-	}
-
-	return fieldName
-}
-
-func loadEnvFile(filePath string) ([]string, error) {
+func loadEnvFile(filePath string) (map[string]string, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Println(err)
@@ -71,37 +38,42 @@ func loadEnvFile(filePath string) ([]string, error) {
 	}
 
 	parsed := strings.Split(string(data), "\n")
-	var words []string
+	keys := make(map[string]string, 0)
 	for _, line := range parsed {
 		if line == "" {
 			continue
 		}
-		keys := strings.Split(string(line), "=")
-		words = append(words, keys...)
+		keyValue := strings.Split(string(line), "=")
+		keys[keyValue[0]] = keyValue[1]
+
 	}
 
-	for i, str := range words {
-		if i%2 == 0 {
-			words[i] = convertToFieldName(str)
-		}
-	}
-	return words, nil
+	return keys, nil
 }
 
 func GetConfig(path string) *Config {
 	cfg := &Config{Env: os.Getenv("ENV")}
-	data, err := loadEnvFile(path)
+	envKeys, err := loadEnvFile(path)
 
 	if err != nil {
 		panic(err)
 	}
 
-	for i, word := range data {
-		if i%2 == 1 {
-			continue
-		}
-		setField(cfg, word, data[i+1])
+	filename := "config/local.yaml"
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
 	}
 
+	err = yaml.Unmarshal(data, cfg)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	cfg.DB.Postgres.DbUser = envKeys["POSTGRES_USER"]
+	cfg.DB.Postgres.DbPassword = envKeys["POSTGRES_PASSWORD"]
+	cfg.DB.Postgres.DbName = envKeys["POSTGRES_DB_NAME"]
 	return cfg
 }
