@@ -7,13 +7,26 @@ import (
 	"strings"
 )
 
+type ServerConfig struct {
+	Port int `yaml:"port"`
+}
+
+type DBConfig struct {
+	Postgres PostgresConfig `yaml:"postgres"`
+}
+
+type PostgresConfig struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string
+	Password string
+	DbName   string
+}
+
 type Config struct {
-	Env              string
-	PostgresUser     string
-	PostgresPassword string
-	PostgresDbName   string
-	PostgresHost     string
-	PostgresPort     int
+	Env    string
+	Server ServerConfig `yaml:"server"`
+	DB     DBConfig     `yaml:"db"`
 }
 
 func setField(obj interface{}, fieldName string, value interface{}) error {
@@ -78,14 +91,17 @@ func loadEnvFile(filePath string) ([]string, error) {
 func GetConfig(path string) *Config {
 	cfg := &Config{Env: os.Getenv("ENV")}
 	data, err := loadEnvFile(path)
+
 	if err != nil {
 		panic(err)
 	}
+
 	for i, word := range data {
 		if i%2 == 1 {
 			continue
 		}
 		setField(cfg, word, data[i+1])
 	}
+
 	return cfg
 }

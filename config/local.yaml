@@ -1,7 +1,6 @@
 server:
   port: 8080
 db:
-  mongo:
   postgres:
     host: localhost
     port: 5432
