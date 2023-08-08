@@ -8,12 +8,12 @@ import (
 
 func main() {
 	cfg := config.GetConfig(".env")
-	logger := logger.GetLogger()
-	logger.Info("%+v\n", cfg)
+	log := logger.GetLogger()
+	log.Info("%+v", cfg)
 	_, err := postgres.Connect(cfg.DB.Postgres)
 	if err != nil {
-		logger.Err(err.Error())
+		log.Err(err.Error())
 		panic(err)
 	}
-
+	log.Warn("Warning ...")
 }
