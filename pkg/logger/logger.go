@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"errors"
 	"log"
 	"os"
 )
@@ -60,9 +59,10 @@ func InitLogger(messages map[string]string, options ...int) {
 	initLogger(messages, flags)
 }
 
-func GetLogger() (Logger, error) {
+func GetLogger() Logger {
 	if (logger != Logger{}) {
-		return logger, nil
+		return logger
 	}
-	return Logger{}, errors.New("logger not initialised")
+	InitLogger(make(map[string]string))
+	return logger
 }

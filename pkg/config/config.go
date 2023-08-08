@@ -17,11 +17,11 @@ type DBConfig struct {
 }
 
 type PostgresConfig struct {
-	Host       string `yaml:"host"`
-	Port       int    `yaml:"port"`
-	DbUser     string
-	DbPassword string
-	DbName     string
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string
+	Password string
+	Name     string
 }
 
 type Config struct {
@@ -72,8 +72,8 @@ func GetConfig(path string) *Config {
 		fmt.Println(err)
 	}
 
-	cfg.DB.Postgres.DbUser = envKeys["POSTGRES_USER"]
-	cfg.DB.Postgres.DbPassword = envKeys["POSTGRES_PASSWORD"]
-	cfg.DB.Postgres.DbName = envKeys["POSTGRES_DB_NAME"]
+	cfg.DB.Postgres.User = envKeys["POSTGRES_USER"]
+	cfg.DB.Postgres.Password = envKeys["POSTGRES_PASSWORD"]
+	cfg.DB.Postgres.Name = envKeys["POSTGRES_DB_NAME"]
 	return cfg
 }

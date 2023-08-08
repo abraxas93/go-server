@@ -3,30 +3,25 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"go-server/pkg/config"
 
 	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "admin"
-	password = "abraxas93"
-	dbname   = "local"
-)
-
-func Connect() {
+func Connect(c config.PostgresConfig) (*sql.DB, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+		c.Host, c.Port, c.User, c.Password, c.Name)
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
-	err = db.Ping()
-	if err != nil {
-		panic(err)
+
+	if err := db.Ping(); err != nil {
+		db.Close() // Close the connection before returning an error
+		return nil, err
 	}
+
 	fmt.Println("Established a successful connection!")
+	return db, nil
 }
