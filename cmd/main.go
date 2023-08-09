@@ -17,8 +17,10 @@ func main() {
 		panic(err)
 	}
 	ur := repositories.New(db)
-	err = ur.CreateUser("Alex", "pwspws12")
+	user, err := ur.FindByID(2)
 	if err != nil {
 		log.Err(err.Error())
+		return
 	}
+	log.Info("%+v", user)
 }

@@ -1,6 +1,9 @@
 package repositories
 
-import "database/sql"
+import (
+	"database/sql"
+	"go-server/pkg/database/models"
+)
 
 type UserRepository struct {
 	DB *sql.DB
@@ -16,4 +19,15 @@ func (r *UserRepository) CreateUser(name string, password string) error {
 		return err
 	}
 	return nil
+}
+
+func (ur *UserRepository) FindByID(id int) (*models.User, error) {
+	var user models.User
+	query := "SELECT id, name, password, created_at, updated_at FROM users WHERE id = $1"
+	row := ur.DB.QueryRow(query, id)
+	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
