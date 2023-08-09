@@ -3,6 +3,7 @@ package main
 import (
 	"go-server/pkg/config"
 	"go-server/pkg/database/postgres"
+	"go-server/pkg/database/repositories"
 	"go-server/pkg/logger"
 )
 
@@ -10,10 +11,14 @@ func main() {
 	cfg := config.GetConfig(".env")
 	log := logger.GetLogger()
 	log.Info("%+v", cfg)
-	_, err := postgres.Connect(cfg.DB.Postgres)
+	db, err := postgres.Connect(cfg.DB.Postgres)
 	if err != nil {
 		log.Err(err.Error())
 		panic(err)
 	}
-	log.Warn("Warning ...")
+	ur := repositories.New(db)
+	err = ur.CreateUser("Alex", "pwspws12")
+	if err != nil {
+		log.Err(err.Error())
+	}
 }
