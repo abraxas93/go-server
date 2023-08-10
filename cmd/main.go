@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"go-server/pkg/config"
 	"go-server/pkg/database/postgres"
 	"go-server/pkg/database/repositories"
@@ -16,8 +17,9 @@ func main() {
 		log.Err(err.Error())
 		panic(err)
 	}
+	ctx := context.Background()
 	ur := repositories.New(db)
-	user, err := ur.FindByID(2)
+	user, err := ur.FindByID(ctx, 2)
 	if err != nil {
 		log.Err(err.Error())
 		return
