@@ -24,5 +24,6 @@ func main() {
 		log.Err(err.Error())
 		return
 	}
+	// ur.DeleteByID(ctx, 1)
 	log.Info("%+v", user)
 }

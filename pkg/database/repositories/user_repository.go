@@ -22,13 +22,22 @@ func (r *UserRepository) CreateUser(ctx context.Context, name string, password s
 	return nil
 }
 
-func (ur *UserRepository) FindByID(ctx context.Context, id int) (*models.User, error) {
+func (r *UserRepository) FindByID(ctx context.Context, id int) (*models.User, error) {
 	var user models.User
 	query := "SELECT id, name, password, created_at, updated_at FROM users WHERE id = $1"
-	row := ur.DB.QueryRowContext(ctx, query, id)
+	row := r.DB.QueryRowContext(ctx, query, id)
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *UserRepository) DeleteByID(ctx context.Context, id int) error {
+	query := "DELETE FROM users WHERE id=$1"
+	_, err := r.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
