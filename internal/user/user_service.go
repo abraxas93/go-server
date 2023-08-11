@@ -6,11 +6,11 @@ type IUserService interface {
 }
 
 type UserService struct {
-	repo UserRepository
+	repo *UserRepository
 }
 
-func NewService(r *UserRepository) {
-
+func NewService(r *UserRepository) *UserService {
+	return &UserService{repo: r}
 }
 
 func (s *UserService) CreateNewUser(name string, password string) {
@@ -21,4 +21,5 @@ func (s *UserService) CreateNewUser(name string, password string) {
 		UpdatedAt: time.Now(),
 	}
 	newUser.encryptPassword()
+
 }
