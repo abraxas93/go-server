@@ -1,16 +1,19 @@
 package user
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type IUserService interface {
 }
 
 type UserService struct {
-	repo *UserRepository
+	Repo UserRepository
 }
 
-func NewService(r *UserRepository) *UserService {
-	return &UserService{repo: r}
+func NewService(r UserRepository) *UserService {
+	return &UserService{Repo: r}
 }
 
 func (s *UserService) CreateNewUser(name string, password string) {
@@ -21,5 +24,5 @@ func (s *UserService) CreateNewUser(name string, password string) {
 		UpdatedAt: time.Now(),
 	}
 	newUser.encryptPassword()
-
+	s.Repo.CreateUser(context.Background(), newUser)
 }

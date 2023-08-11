@@ -14,8 +14,8 @@ func New(db *sql.DB) *UserRepository {
 	return &UserRepository{DB: db}
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, name string, password string) error {
-	_, err := r.DB.ExecContext(ctx, "INSERT INTO users (name, password) VALUES ($1, $2)", name, password)
+func (r *UserRepository) CreateUser(ctx context.Context, u models.User) error {
+	_, err := r.DB.ExecContext(ctx, "INSERT INTO users (name, password, created_at, updated_at) VALUES ($1, $2, $3, $4)", u.Name, u.Password, u.CreatedAt, u.UpdatedAt)
 	if err != nil {
 		return err
 	}
