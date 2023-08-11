@@ -16,7 +16,7 @@ func NewService(r UserRepository) *UserService {
 	return &UserService{Repo: r}
 }
 
-func (s *UserService) CreateNewUser(name string, password string) error {
+func (s *UserService) CreateNewUser(name string, password string) (int64, error) {
 	newUser := User{
 		Name:      name,
 		Password:  password,
@@ -24,6 +24,6 @@ func (s *UserService) CreateNewUser(name string, password string) error {
 		UpdatedAt: time.Now(),
 	}
 	newUser.EncryptPassword()
-	err := s.Repo.CreateUser(context.Background(), newUser)
-	return err
+	id, err := s.Repo.CreateUser(context.Background(), newUser)
+	return id, err
 }
