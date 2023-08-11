@@ -14,12 +14,20 @@ func New(db *sql.DB) *UserRepository {
 	return &UserRepository{DB: db}
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, u models.User) error {
-	_, err := r.DB.ExecContext(ctx, "INSERT INTO users (name, password, created_at, updated_at) VALUES ($1, $2, $3, $4)", u.Name, u.Password, u.CreatedAt, u.UpdatedAt)
+func (r *UserRepository) CreateUser(ctx context.Context, u models.User) (int64, error) {
+	query := `
+		INSERT INTO users (name, password, created_at, updated_at)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id
+	`
+	var id int64
+
+	err := r.DB.QueryRowContext(ctx, query, u.Name, u.Password, u.CreatedAt, u.UpdatedAt).Scan(&id)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+
+	return id, nil
 }
 
 func (r *UserRepository) FindByID(ctx context.Context, id int) (*models.User, error) {

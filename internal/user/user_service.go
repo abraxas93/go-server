@@ -23,7 +23,7 @@ func (s *UserService) CreateNewUser(name string, password string) error {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	newUser.encryptPassword()
+	newUser.EncryptPassword()
 	err := s.Repo.CreateUser(context.Background(), newUser)
 	return err
 }
