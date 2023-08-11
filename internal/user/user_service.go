@@ -1,5 +1,7 @@
 package user
 
+import "time"
+
 type IUserService interface {
 }
 
@@ -11,6 +13,12 @@ func NewService(r *UserRepository) {
 
 }
 
-func (s *UserService) CreateNewUser() {
-
+func (s *UserService) CreateNewUser(name string, password string) {
+	newUser := User{
+		Name:      name,
+		Password:  password,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	newUser.encryptPassword()
 }

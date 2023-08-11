@@ -14,9 +14,9 @@ type User struct {
 	UpdatedAt time.Time
 }
 
-func (u *User) encryptPassword(password string) {
+func (u *User) encryptPassword() {
 	hash := sha256.New()
-	hash.Write([]byte(password))
+	hash.Write([]byte(u.Password))
 	hashed := hash.Sum(nil)
 	u.Password = fmt.Sprintf("%x", hashed)
 }
