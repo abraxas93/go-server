@@ -11,6 +11,6 @@ func NewService(r *UserRepository) {
 
 }
 
-func CreateNewUser() {
+func (s *UserService) CreateNewUser() {
 
 }
