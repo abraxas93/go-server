@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	"database/sql"
-	"go-server/pkg/database/models"
+	"go-server/internal/user"
 )
 
 type UserRepository struct {
@@ -14,7 +14,7 @@ func New(db *sql.DB) *UserRepository {
 	return &UserRepository{DB: db}
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, u models.User) (int64, error) {
+func (r *UserRepository) CreateUser(ctx context.Context, u user.User) (int64, error) {
 	query := `
 		INSERT INTO users (name, password, created_at, updated_at)
 		VALUES ($1, $2, $3, $4)
@@ -30,8 +30,8 @@ func (r *UserRepository) CreateUser(ctx context.Context, u models.User) (int64, 
 	return id, nil
 }
 
-func (r *UserRepository) FindByID(ctx context.Context, id int) (*models.User, error) {
-	var user models.User
+func (r *UserRepository) FindByID(ctx context.Context, id int) (*user.User, error) {
+	var user user.User
 	query := "SELECT id, name, password, created_at, updated_at FROM users WHERE id = $1"
 	row := r.DB.QueryRowContext(ctx, query, id)
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.CreatedAt, &user.UpdatedAt)

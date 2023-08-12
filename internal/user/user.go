@@ -7,11 +7,11 @@ import (
 )
 
 type User struct {
-	ID        int
-	Name      string
-	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        int       `json:"id"`
+	Name      string    `json:"name"`
+	Password  string    `json:"password"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (u *User) EncryptPassword() {

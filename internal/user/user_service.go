@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-type IUserService interface {
+type UserServiceInterface interface {
+	CreateNewUser(name string, password string) (int64, error)
 }
 
 type UserService struct {
@@ -26,4 +27,9 @@ func (s *UserService) CreateNewUser(name string, password string) (int64, error)
 	newUser.EncryptPassword()
 	id, err := s.Repo.CreateUser(context.Background(), newUser)
 	return id, err
+}
+
+func (s *UserService) GetUser(id int) (User, error) {
+	user, err := s.Repo.FindByID(context.Background(), id)
+	return user, err
 }
