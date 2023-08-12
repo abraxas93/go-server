@@ -7,14 +7,15 @@ import (
 
 type UserServiceInterface interface {
 	CreateNewUser(name string, password string) (int64, error)
+	GetUser(id int) (User, error)
 }
 
 type UserService struct {
-	Repo UserRepository
+	Repo UserRepositoryIface
 }
 
-func NewService(r UserRepository) *UserService {
-	return &UserService{Repo: r}
+func NewService(r UserRepositoryIface) UserService {
+	return UserService{Repo: r}
 }
 
 func (s *UserService) CreateNewUser(name string, password string) (int64, error) {
@@ -29,7 +30,7 @@ func (s *UserService) CreateNewUser(name string, password string) (int64, error)
 	return id, err
 }
 
-func (s *UserService) GetUser(id int) (User, error) {
+func (s *UserService) GetUser(id int) (*User, error) {
 	user, err := s.Repo.FindByID(context.Background(), id)
 	return user, err
 }

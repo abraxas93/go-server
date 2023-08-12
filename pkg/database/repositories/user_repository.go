@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"go-server/internal/user"
 )
 
@@ -36,8 +37,10 @@ func (r *UserRepository) FindByID(ctx context.Context, id int) (*user.User, erro
 	row := r.DB.QueryRowContext(ctx, query, id)
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
-		return nil, err
+		return &user, err
 	}
+	fmt.Printf("%p\n", &user)
+	fmt.Println("----")
 	return &user, nil
 }
 
