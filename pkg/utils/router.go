@@ -47,6 +47,14 @@ func (r *Router) DELETE(pattern string, handler HandlerFunc) {
 	r.addRoute("GET", pattern, handler)
 }
 
+func baseHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello, world!"))
+}
+
+func (r *Router) Handle() http.Handler {
+	return HandlerFunc(baseHandler)
+}
+
 // should store paths patterns
 // first defining map for storing method types
 // should parse url
