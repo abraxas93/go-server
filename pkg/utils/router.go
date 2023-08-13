@@ -4,7 +4,7 @@ import "net/http"
 
 type HandlerFunc func(http.ResponseWriter, *http.Request)
 
-type Handlers map[string]func(http.ResponseWriter, *http.Request)
+type Handlers map[string]HandlerFunc
 
 type Routes map[string]Handlers
 
@@ -25,6 +25,14 @@ func NewRouter() Router {
 			"DELETE": Handlers{},
 		},
 	}
+}
+
+func (r *Router) addRoute(method string, pattern string, handler HandlerFunc) {
+	r.routes[method][pattern] = handler
+}
+
+func (r *Router) GET(pattern string, handler HandlerFunc) {
+	r.addRoute("GET", pattern, handler)
 }
 
 // should store paths patterns
