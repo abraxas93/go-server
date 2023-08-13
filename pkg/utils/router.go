@@ -35,6 +35,18 @@ func (r *Router) GET(pattern string, handler HandlerFunc) {
 	r.addRoute("GET", pattern, handler)
 }
 
+func (r *Router) POST(pattern string, handler HandlerFunc) {
+	r.addRoute("GET", pattern, handler)
+}
+
+func (r *Router) PUT(pattern string, handler HandlerFunc) {
+	r.addRoute("GET", pattern, handler)
+}
+
+func (r *Router) DELETE(pattern string, handler HandlerFunc) {
+	r.addRoute("GET", pattern, handler)
+}
+
 // should store paths patterns
 // first defining map for storing method types
 // should parse url
