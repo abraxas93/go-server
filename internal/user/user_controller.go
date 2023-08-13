@@ -22,6 +22,7 @@ func (c *UserCtrl) HelloHandler(w http.ResponseWriter, r *http.Request) {
 
 func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 
+	fmt.Println(r.URL)
 	parts := strings.Split(r.URL.Path, "/")
 	fmt.Println(len(parts))
 	userID, err := strconv.Atoi(parts[2])

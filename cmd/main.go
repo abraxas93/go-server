@@ -9,6 +9,16 @@ import (
 	"net/http"
 )
 
+func HelloHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello, world!"))
+}
+
+type HandlerFunc func(http.ResponseWriter, *http.Request)
+
+func (fn HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fn(w, r)
+}
+
 func main() {
 	cfg := config.GetConfig(".env")
 	// log := logger.GetLogger()
@@ -31,9 +41,13 @@ func main() {
 	fmt.Printf("%p\n", p)
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("/users/:id", userCtrl.HelloHandler)
 	mux.HandleFunc("/users/", userCtrl.GetUserHandler)
 
+	http.Handle("/", HandlerFunc(HelloHandler))
 	// Start the server
-	http.ListenAndServe(":8080", mux)
+	http.ListenAndServe(":8080", nil)
 
 }
+
+//
