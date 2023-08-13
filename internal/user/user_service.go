@@ -5,17 +5,17 @@ import (
 	"time"
 )
 
-type UserServiceInterface interface {
+type UserServiceIface interface {
 	CreateNewUser(name string, password string) (int64, error)
-	GetUser(id int) (User, error)
+	GetUser(id int) (*User, error)
 }
 
 type UserService struct {
 	Repo UserRepositoryIface
 }
 
-func NewService(r UserRepositoryIface) UserService {
-	return UserService{Repo: r}
+func NewUserService(r UserRepositoryIface) *UserService {
+	return &UserService{Repo: r}
 }
 
 func (s *UserService) CreateNewUser(name string, password string) (int64, error) {

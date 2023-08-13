@@ -9,10 +9,6 @@ import (
 	"net/http"
 )
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello, world!"))
-}
-
 func main() {
 	cfg := config.GetConfig(".env")
 	// log := logger.GetLogger()
@@ -21,8 +17,9 @@ func main() {
 		panic(err)
 		return
 	}
-	ur := repositories.New(db)
-	userService := user.NewService(ur)
+	ur := repositories.NewUserRepository(db)
+	userService := user.NewUserService(ur)
+	userCtrl := user.NewUserCtrl(userService)
 	user, err := userService.GetUser(2)
 	if err != nil {
 		panic(err)
@@ -32,10 +29,11 @@ func main() {
 	p := user
 	fmt.Printf("%p\n", user)
 	fmt.Printf("%p\n", p)
-	// mux := http.NewServeMux()
-	// mux.HandleFunc("/", helloHandler)
-	// // mux.HandleFunc("/user", user.UserCtrl.GetUserHandler)
-	// // Start the server
-	// http.ListenAndServe(":8080", mux)
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/users/", userCtrl.GetUserHandler)
+
+	// Start the server
+	http.ListenAndServe(":8080", mux)
 
 }

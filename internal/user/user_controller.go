@@ -2,11 +2,18 @@ package user
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type UserCtrl struct {
-	service UserServiceInterface
+	service UserServiceIface
+}
+
+func NewUserCtrl(s UserServiceIface) *UserCtrl {
+	return &UserCtrl{service: s}
 }
 
 func (c *UserCtrl) HelloHandler(w http.ResponseWriter, r *http.Request) {
@@ -14,8 +21,18 @@ func (c *UserCtrl) HelloHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *http.Request) {
+
+	parts := strings.Split(r.URL.Path, "/")
+	fmt.Println(len(parts))
+	userID, err := strconv.Atoi(parts[2])
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Error while parsing", http.StatusBadRequest)
+		return
+	}
+	fmt.Println(parts)
 	// Marshal the User struct into JSON
-	user, err := c.service.GetUser(2)
+	user, err := c.service.GetUser(userID)
 	if err != nil {
 		http.Error(w, "Something with postgres", http.StatusInternalServerError)
 		return
