@@ -17,12 +17,14 @@ func NewUserCtrl(s UserServiceIface) *UserCtrl {
 }
 
 func (c *UserCtrl) HelloHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL)
 	w.Write([]byte("Hello, world!"))
 }
 
 func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(r.URL)
+	fmt.Println(r.Method)
 	parts := strings.Split(r.URL.Path, "/")
 	fmt.Println(len(parts))
 	userID, err := strconv.Atoi(parts[2])
