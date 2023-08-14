@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"fmt"
 	"go-server/pkg/utils/controller"
 	"go-server/pkg/utils/router"
 	"net/http"
@@ -20,16 +19,19 @@ func NewUserCtrl(s UserServiceIface) *UserCtrl {
 func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
 	// Set the appropriate Content-Type header
 	w.Header().Set("Content-Type", "application/json")
-	var body []byte
-	userID, err := strconv.Atoi(r.Params[":id"])
 
+	var body []byte
+	var user *User
+	var err error
+	userID, err := strconv.Atoi(r.Params[":id"])
+	// FIX: should throw invalid params error in case, when :id can't be converted to int
 	if err != nil {
-		http.Error(w, "Error while parsing", http.StatusBadRequest)
-		return
+		json, _ := controller.GetJsonResponse(user, errors.New("InvalidUrlParams"))
+		body = json
+		w.WriteHeader(http.StatusNotAcceptable)
 	}
 
-	// Marshal the User struct into JSON
-	user, err := c.service.GetUser(userID)
+	user, err = c.service.GetUser(userID)
 
 	if user == nil {
 		json, _ := controller.GetJsonResponse(user, errors.New("UserNotFound"))
@@ -42,11 +44,9 @@ func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
 		body = json
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-	fmt.Println(user)
+
 	if user != nil {
-		json, err := controller.GetJsonResponse(user, nil)
-		fmt.Println(string(json))
-		fmt.Println(err)
+		json, _ := controller.GetJsonResponse(user, nil)
 		body = json
 		w.WriteHeader(http.StatusOK)
 	}
