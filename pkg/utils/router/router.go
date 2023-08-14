@@ -5,23 +5,16 @@ import (
 	"strings"
 )
 
+// Types
 type Request struct {
 	*http.Request
 	Params map[string]string
 }
-
-// type ExtResponse struct {
-// 	writer http.ResponseWriter
-// }
-
 type HandlerFunc func(w http.ResponseWriter, r *Request)
-
 type Route string
 type Handlers map[Route]HandlerFunc
-
 type HttpMethod string
 type Routes map[HttpMethod]Handlers
-
 type Router struct {
 	routes Routes
 }
@@ -35,6 +28,7 @@ func (fn HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fn(w, req)
 }
 
+// Constructor
 func NewRouter() Router {
 	return Router{
 		routes: Routes{
