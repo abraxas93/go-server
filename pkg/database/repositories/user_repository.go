@@ -36,7 +36,10 @@ func (r *UserRepository) FindByID(ctx context.Context, id int) (*user.User, erro
 	row := r.DB.QueryRowContext(ctx, query, id)
 	err := row.Scan(&user.ID, &user.Name, &user.Password, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
-		return &user, err
+		if err == sql.ErrNoRows {
+			return nil, nil // User not found, return nil and nil error
+		}
+		return nil, err // Other error, return nil user and the error
 	}
 	return &user, nil
 }

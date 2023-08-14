@@ -21,13 +21,14 @@ func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
 	userID, err := strconv.Atoi(r.Params[":id"])
 
 	if err != nil {
-		fmt.Println(err)
 		http.Error(w, "Error while parsing", http.StatusBadRequest)
 		return
 	}
 
 	// Marshal the User struct into JSON
 	user, err := c.service.GetUser(userID)
+	fmt.Println(user)
+	fmt.Println(err.Error())
 	if err != nil {
 		http.Error(w, "Something with postgres", http.StatusInternalServerError)
 		return
