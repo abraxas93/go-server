@@ -2,6 +2,9 @@ package user
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"go-server/pkg/utils/controller"
 	"go-server/pkg/utils/router"
 	"net/http"
 	"strconv"
@@ -26,8 +29,17 @@ func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
 
 	// Marshal the User struct into JSON
 	user, err := c.service.GetUser(userID)
-	if err != nil {
 
+	if user == nil {
+		json, _ := controller.GetJsonResponse(user, errors.New("UserNotFound"))
+		fmt.Println(string(json))
+		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(json)
+		return
+	}
+
+	if err != nil {
 		http.Error(w, "InternalServerError", http.StatusInternalServerError)
 		return
 	}
