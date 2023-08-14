@@ -40,24 +40,9 @@ func NewRouter() Router {
 	}
 }
 
+// Private
 func (r *Router) addRoute(method HttpMethod, pattern Route, handler HandlerFunc) {
 	r.routes[method][pattern] = handler
-}
-
-func (r *Router) GET(pattern Route, handler HandlerFunc) {
-	r.addRoute("GET", pattern, handler)
-}
-
-func (r *Router) POST(pattern Route, handler HandlerFunc) {
-	r.addRoute("GET", pattern, handler)
-}
-
-func (r *Router) PUT(pattern Route, handler HandlerFunc) {
-	r.addRoute("GET", pattern, handler)
-}
-
-func (r *Router) DELETE(pattern Route, handler HandlerFunc) {
-	r.addRoute("GET", pattern, handler)
 }
 
 func (r *Router) getRoutesByMethod(url string, method HttpMethod) []string {
@@ -136,6 +121,23 @@ func (r *Router) baseHandler(w http.ResponseWriter, rq *Request) {
 	http.Error(w, "Not Found", http.StatusNotFound)
 }
 
+// Public
 func (r *Router) Handle() http.Handler {
 	return HandlerFunc(r.baseHandler)
+}
+
+func (r *Router) GET(pattern Route, handler HandlerFunc) {
+	r.addRoute("GET", pattern, handler)
+}
+
+func (r *Router) POST(pattern Route, handler HandlerFunc) {
+	r.addRoute("GET", pattern, handler)
+}
+
+func (r *Router) PUT(pattern Route, handler HandlerFunc) {
+	r.addRoute("GET", pattern, handler)
+}
+
+func (r *Router) DELETE(pattern Route, handler HandlerFunc) {
+	r.addRoute("GET", pattern, handler)
 }
