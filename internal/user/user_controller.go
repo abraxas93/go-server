@@ -2,7 +2,6 @@ package user
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-server/pkg/utils/router"
 	"net/http"
 	"strconv"
@@ -27,10 +26,9 @@ func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
 
 	// Marshal the User struct into JSON
 	user, err := c.service.GetUser(userID)
-	fmt.Println(user)
-	fmt.Println(err.Error())
 	if err != nil {
-		http.Error(w, "Something with postgres", http.StatusInternalServerError)
+
+		http.Error(w, "InternalServerError", http.StatusInternalServerError)
 		return
 	}
 	jsonData, err := json.Marshal(user)
