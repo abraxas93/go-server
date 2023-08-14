@@ -6,7 +6,7 @@ import (
 	"go-server/pkg/config"
 	"go-server/pkg/database/postgres"
 	"go-server/pkg/database/repositories"
-	router "go-server/pkg/utils"
+	"go-server/pkg/utils/router"
 	"net/http"
 	"strings"
 )
@@ -103,40 +103,20 @@ func main() {
 	ur := repositories.NewUserRepository(db)
 	userService := user.NewUserService(ur)
 	userCtrl := user.NewUserCtrl(userService)
-	user, err := userService.GetUser(2)
+
 	if err != nil {
 		panic(err)
 		return
 	}
 	// log.Info("%+v\n", user)
-	p := user
-	fmt.Printf("%p\n", user)
-	fmt.Printf("%p\n", p)
-	mux := http.NewServeMux()
 
-	// mux.HandleFunc("/users/:id", userCtrl.HelloHandler)
-	mux.HandleFunc("/users/", userCtrl.HelloHandler)
 	r := router.NewRouter()
-	r.GET("/users", userCtrl.HelloHandler)
-	// http.Handle("/", HandlerFunc(HelloHandler))
+	// r.GET("/users", userCtrl.HelloHandler)
+	r.GET("/users/:id", userCtrl.HelloHandler)
+
 	// Start the server
 	http.ListenAndServe(":8080", r.Handle())
-	m := map[string]int{
-		"/users/32":          1,
-		"/users/create":      2,
-		"/users/43/comments": 3,
-	}
-	str := "/users/45/comments"
-	parts := strings.Split("/users/43/comments", "/:")
-	fmt.Println(len(parts))
-	fmt.Println(parts)
-	fmt.Println(m[str])
-	fmt.Println(ParseUrl(str))
-	// fmt.Println(ParseSegments("/users/:id/comments/:url"))
-	route := ParseSegments("/users/:id/comments/:url")
-	url := ParseSegments("/users/43/comments/my-url")
-	fmt.Println(IsUrlMatchRoute(url, route))
-	fmt.Println(CollectParams("/users/43/comments/my-url", "/users/:id/comments/:url"))
+
 }
 
 //

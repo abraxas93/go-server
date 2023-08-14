@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/json"
 	"fmt"
+	"go-server/pkg/utils/router"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,7 +17,17 @@ func NewUserCtrl(s UserServiceIface) *UserCtrl {
 	return &UserCtrl{service: s}
 }
 
-func (c *UserCtrl) HelloHandler(w http.ResponseWriter, r *http.Request) {
+func (c *UserCtrl) HelloHandler(w http.ResponseWriter, r *router.Request) {
+	fmt.Println(r.Method)
+	w.Write([]byte("Hello, world!"))
+}
+
+func (c *UserCtrl) AlbumHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL)
+	w.Write([]byte("Hello, world!"))
+}
+
+func (c *UserCtrl) CommentHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.URL)
 	w.Write([]byte("Hello, world!"))
 }
