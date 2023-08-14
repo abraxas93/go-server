@@ -5,15 +5,26 @@ import (
 )
 
 type Response[T any] struct {
-	Data T      `json:"data"`
-	Err  string `json:"error"`
+	Data T       `json:"data"`
+	Err  *string `json:"error"`
 }
 
 func GetJsonResponse[T any](data T, err error) ([]byte, error) {
+	errStr := ""
+	if err != nil {
+		errStr = err.Error()
+	}
+
+	var errPtr *string
+	if errStr != "" {
+		errPtr = &errStr
+	}
+
 	r := Response[any]{
 		Data: data,
-		Err:  err.Error(),
+		Err:  errPtr,
 	}
+
 	json, err := json.Marshal(r)
 	return json, err
 }

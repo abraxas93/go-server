@@ -1,7 +1,6 @@
 package user
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"go-server/pkg/utils/controller"
@@ -19,7 +18,9 @@ func NewUserCtrl(s UserServiceIface) *UserCtrl {
 }
 
 func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
-
+	// Set the appropriate Content-Type header
+	w.Header().Set("Content-Type", "application/json")
+	var body []byte
 	userID, err := strconv.Atoi(r.Params[":id"])
 
 	if err != nil {
@@ -32,25 +33,23 @@ func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
 
 	if user == nil {
 		json, _ := controller.GetJsonResponse(user, errors.New("UserNotFound"))
-		fmt.Println(string(json))
+		body = json
 		w.WriteHeader(http.StatusBadRequest)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json)
-		return
 	}
 
 	if err != nil {
-		http.Error(w, "InternalServerError", http.StatusInternalServerError)
-		return
+		json, _ := controller.GetJsonResponse(user, errors.New("InternalServerError"))
+		body = json
+		w.WriteHeader(http.StatusInternalServerError)
 	}
-	jsonData, err := json.Marshal(user)
-	if err != nil {
-		http.Error(w, "Failed to marshal JSON", http.StatusInternalServerError)
-		return
+	fmt.Println(user)
+	if user != nil {
+		json, err := controller.GetJsonResponse(user, nil)
+		fmt.Println(string(json))
+		fmt.Println(err)
+		body = json
+		w.WriteHeader(http.StatusOK)
 	}
-	// Set the appropriate Content-Type header
-	w.Header().Set("Content-Type", "application/json")
-
 	// Write the JSON data to the response
-	w.Write(jsonData)
+	w.Write(body)
 }
