@@ -6,7 +6,7 @@ import (
 	"go-server/pkg/config"
 	"go-server/pkg/database/postgres"
 	"go-server/pkg/database/repositories"
-	"go-server/pkg/logger"
+	"go-server/pkg/utils/logger"
 	"go-server/pkg/utils/router"
 	"net/http"
 )

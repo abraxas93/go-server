@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"go-server/pkg/config"
-	"go-server/pkg/logger"
+	"go-server/pkg/utils/logger"
 
 	_ "github.com/lib/pq"
 )
