@@ -3,7 +3,6 @@ package repositories
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"go-server/internal/user"
 )
 
@@ -39,8 +38,6 @@ func (r *UserRepository) FindByID(ctx context.Context, id int) (*user.User, erro
 	if err != nil {
 		return &user, err
 	}
-	fmt.Printf("%p\n", &user)
-	fmt.Println("----")
 	return &user, nil
 }
 

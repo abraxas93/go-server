@@ -111,8 +111,8 @@ func main() {
 	// log.Info("%+v\n", user)
 
 	r := router.NewRouter()
-	// r.GET("/users", userCtrl.HelloHandler)
-	r.GET("/users/:id", userCtrl.HelloHandler)
+
+	r.GET("/users/:id", userCtrl.GetUserHandler)
 
 	// Start the server
 	http.ListenAndServe(":8080", r.Handle())
