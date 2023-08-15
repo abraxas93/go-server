@@ -23,12 +23,15 @@ func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
 	var body []byte
 	var user *User
 	var err error
+
 	userID, err := strconv.Atoi(r.Params[":id"])
-	// FIX: should throw invalid params error in case, when :id can't be converted to int
+
 	if err != nil {
 		json, _ := controller.GetJsonResponse(user, errors.New("InvalidUrlParams"))
 		body = json
 		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write(body)
+		return
 	}
 
 	user, err = c.service.GetUser(userID)
