@@ -52,3 +52,33 @@ func (r *UserRepository) DeleteByID(ctx context.Context, id int) error {
 	}
 	return nil
 }
+
+func (r *UserRepository) FindAll(ctx context.Context) ([]user.User, error) {
+	var users []user.User
+	query := "SELECT * FROM users"
+	rows, err := r.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var user user.User
+		err := rows.Scan(&user.ID, &user.Name, &user.Password, &user.CreatedAt, &user.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	if len(users) == 0 {
+		// No users found, return empty slice and nil error
+		return []user.User{}, nil
+	}
+
+	return users, nil
+}
