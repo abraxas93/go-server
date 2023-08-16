@@ -1,7 +1,8 @@
-package user
+package controllers
 
 import (
 	"errors"
+	"go-server/internal/user"
 	"go-server/pkg/utils/controller"
 	"go-server/pkg/utils/router"
 	"net/http"
@@ -9,10 +10,10 @@ import (
 )
 
 type UserCtrl struct {
-	service UserServiceIface
+	service user.UserServiceIface
 }
 
-func NewUserCtrl(s UserServiceIface) *UserCtrl {
+func NewUserCtrl(s user.UserServiceIface) *UserCtrl {
 	return &UserCtrl{service: s}
 }
 
@@ -21,7 +22,7 @@ func (c *UserCtrl) GetUserHandler(w http.ResponseWriter, r *router.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var body []byte
-	var user *User
+	var user *user.User
 	var err error
 
 	userID, err := strconv.Atoi(r.Params[":id"])

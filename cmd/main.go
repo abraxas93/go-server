@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-server/internal/user"
 	"go-server/pkg/config"
+	"go-server/pkg/controllers"
 	"go-server/pkg/database/postgres"
 	"go-server/pkg/database/repositories"
 	"go-server/pkg/utils/logger"
@@ -21,7 +22,7 @@ func main() {
 	}
 	ur := repositories.NewUserRepository(db)
 	userService := user.NewUserService(ur)
-	userCtrl := user.NewUserCtrl(userService)
+	userCtrl := controllers.NewUserCtrl(userService)
 
 	// log.Info("%+v\n", user)
 
