@@ -34,3 +34,8 @@ func (s *UserService) GetUser(id int) (*User, error) {
 	user, err := s.Repo.FindByID(context.Background(), id)
 	return user, err
 }
+
+func (s *UserService) GetUsers() ([]User, error) {
+	users, err := s.Repo.FindAll(context.Background())
+	return users, err
+}

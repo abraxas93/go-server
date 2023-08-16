@@ -23,7 +23,7 @@ func main() {
 	ur := repositories.NewUserRepository(db)
 	userService := user.NewUserService(ur)
 	userCtrl := controllers.NewUserCtrl(userService)
-
+	// log.Info("%+v\n", users)
 	// log.Info("%+v\n", user)
 
 	r := router.NewRouter()
